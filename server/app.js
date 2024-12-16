@@ -4,10 +4,10 @@ import "dotenv/config"
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Hello, World! From '+ process.env.USER_NAME);
+  res.send('CI-CD Configuration Succesfull');
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 9999;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
