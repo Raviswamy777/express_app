@@ -21,7 +21,7 @@ jobs:
     
     - name: Move repository to the actions-runner directory
       run: |
-        mv /home/runner/work/express_app /root/actions-runner
+        sudo mv /home/runner/work/express_app /root/actions-runner
 
     - name: Set working directory to server and create .env file
       working-directory: /root/actions-runner/express_app/server
