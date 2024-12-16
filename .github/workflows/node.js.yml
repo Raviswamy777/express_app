@@ -1,3 +1,6 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For mor e information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
 name: Node.js CI
 
 on:
@@ -14,31 +17,29 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v3
     
     - name: Create .env for server
-      working-directory: ./server
+      working-directory: server
       run: |
         echo "$SERVER_ENV" > .env
         echo $USER
         echo $PATH
-        npm i -g pm2
       env:
         SERVER_ENV: ${{ secrets.Server_ENV }}
 
     - name: Install server dependencies
-      working-directory: ./server
+      working-directory: server
       run: npm install
       
     - name: Deploy and restart with PM2
-      working-directory: ./server
+      working-directory: server
       run: |
-        # If PM2 is running from the correct location
         if pm2 list | grep -q cicd; then
           pm2 restart cicd
         else
-          # Start the app from the correct directory (root/action-runners)
-          pm2 start /root/action-runners/server/app.js --name cicd
+          pm2 start app.js --name cicd
         fi
