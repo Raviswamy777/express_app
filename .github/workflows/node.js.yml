@@ -22,6 +22,10 @@ jobs:
     - name: Move repository to the actions-runner directory
       run: |
         sudo mv /home/runner/work/express_app /root/actions-runner
+        # Change ownership of the directory to the runner user
+        sudo chown -R runner:runner /root/actions-runner
+        # Set proper permissions to ensure the runner user can read/write
+        sudo chmod -R 755 /root/actions-runner
 
     - name: Set working directory to server and create .env file
       working-directory: /root/actions-runner/express_app/server
