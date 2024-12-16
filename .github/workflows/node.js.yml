@@ -19,18 +19,16 @@ jobs:
     - name: Checkout the repository
       uses: actions/checkout@v3
     
-    - name: Move repository to the actions-runner directory
+    - name: Move repository to the actions-runner directory inside /home/runner
       run: |
-        # Ensure the actions-runner directory exists before moving the repo
-        sudo mkdir -p /root/actions-runner
-        sudo mv /home/runner/work/express_app /root/actions-runner/
-        # Change ownership and permissions for the /root/actions-runner directory and its contents
-        sudo chown -R runner:runner /root/actions-runner
-        sudo chmod -R 775 /root/actions-runner
-        sudo chmod -R 755 /root/actions-runner/express_app
+        mkdir -p /home/runner/actions-runner
+        mv /home/runner/work/express_app /home/runner/actions-runner/express_app
+        # Change ownership and permissions for the /home/runner/actions-runner directory and its contents
+        sudo chown -R runner:runner /home/runner/actions-runner
+        sudo chmod -R 775 /home/runner/actions-runner
 
     - name: Set working directory to server and create .env file
-      working-directory: /root/actions-runner/express_app/server
+      working-directory: /home/runner/actions-runner/express_app/server
       run: |
         echo "$SERVER_ENV" > .env
         echo $USER
@@ -40,16 +38,16 @@ jobs:
         SERVER_ENV: ${{ secrets.Server_ENV }}
 
     - name: Install server dependencies
-      working-directory: /root/actions-runner/express_app/server
+      working-directory: /home/runner/actions-runner/express_app/server
       run: npm install
 
     - name: Deploy and restart with PM2
-      working-directory: /root/actions-runner/express_app/server
+      working-directory: /home/runner/actions-runner/express_app/server
       run: |
         # If PM2 is running from the correct location
         if pm2 list | grep -q cicd; then
           pm2 restart cicd
         else
           # Start the app from the correct location
-          pm2 start /root/actions-runner/express_app/server/app.js --name cicd
+          pm2 start /home/runner/actions-runner/express_app/server/app.js --name cicd
         fi
