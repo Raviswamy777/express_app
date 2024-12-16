@@ -23,23 +23,18 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: Create .env for server
-      working-directory: express_app
+      working-directory: server
       run: |
         echo "$SERVER_ENV" > .env
       env:
         SERVER_ENV: ${{ secrets.Server_ENV }}
 
     - name: Install server dependencies
-      working-directory: express_app
+      working-directory: server
       run: npm install
       
     - name: Deploy and restart with PM2
-      working-directory: express_app
-      run: |
-        if pm2 list | grep -q "ci-cd app"; then
-          pm2 restart "ci-cd app"
-        else
-          pm2 start app.js --name "ci-cd app"
-        fi
+      working-directory: server
+      run: npm start
 
 
