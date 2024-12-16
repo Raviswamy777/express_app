@@ -30,4 +30,4 @@ jobs:
 
     - name: Deploy and restart with PM2
       working-directory: ./server
-      run: npm start
+      run: npm restart
