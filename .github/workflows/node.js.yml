@@ -16,18 +16,18 @@ jobs:
         node-version: [22.x]
 
     steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
     
-    - name: Move repository to the actions-runner directory inside /home/runner
+    - name: Ensure directory exists for server and move the repo
       run: |
-        mkdir -p /home/runner/actions-runner
-        mv /home/runner/work/express_app /home/runner/actions-runner/express_app
-        # Change ownership and permissions for the /home/runner/actions-runner directory and its contents
+        # Create the actions-runner directory if it doesn't exist
+        sudo mkdir -p /home/runner/actions-runner/express_app/server
+        sudo mv /home/runner/work/express_app /home/runner/actions-runner/
+        # Fix ownership and permissions
         sudo chown -R runner:runner /home/runner/actions-runner
         sudo chmod -R 775 /home/runner/actions-runner
 
-    - name: Set working directory to server and create .env file
+    - name: Create .env for server
       working-directory: /home/runner/actions-runner/express_app/server
       run: |
         echo "$SERVER_ENV" > .env
@@ -44,10 +44,8 @@ jobs:
     - name: Deploy and restart with PM2
       working-directory: /home/runner/actions-runner/express_app/server
       run: |
-        # If PM2 is running from the correct location
         if pm2 list | grep -q cicd; then
           pm2 restart cicd
         else
-          # Start the app from the correct location
           pm2 start /home/runner/actions-runner/express_app/server/app.js --name cicd
         fi
