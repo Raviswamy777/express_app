@@ -20,8 +20,6 @@ jobs:
     
     - name: Ensure directory exists for server and move the repo
       run: |
-        # Create the actions-runner directory if it doesn't exist
-        sudo mkdir -p /home/runner/actions-runner/express_app/server
         sudo mv /home/runner/work/express_app /home/runner/actions-runner/
         # Fix ownership and permissions
         sudo chown -R runner:runner /home/runner/actions-runner
