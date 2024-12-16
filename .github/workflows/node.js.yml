@@ -28,6 +28,7 @@ jobs:
         echo "$SERVER_ENV" > .env
         echo $USER
         echo $PATH
+        npm i -g pm2
       env:
         SERVER_ENV: ${{ secrets.Server_ENV }}
 
