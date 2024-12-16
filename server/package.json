@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "/usr/local/bin/pm2 start app.js --name 'ci-cd app'",
+    "start": "node app.js'",
     "restart": "pm2 restart 'ci-cd app'"
   },
   "type": "module",
