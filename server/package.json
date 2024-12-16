@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "restart": "pm2 restart 'ci-cd app'"
+    "start": "pm2 start app.js --name cicd",
+    "restart": "pm2 restart cicd'"
   },
   "type": "module",
   "keywords": [],

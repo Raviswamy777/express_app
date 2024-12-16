@@ -35,6 +35,11 @@ jobs:
       
     - name: Deploy and restart with PM2
       working-directory: server
-      run: npm start
+      run: |
+        if pm2 list | grep -q cicd; then
+          pm2 restart cicd
+        else
+          pm2 start app.js --name cicd
+        fi
 
 
