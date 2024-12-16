@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -16,19 +15,15 @@ jobs:
         node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout the repository
+      uses: actions/checkout@v3
     
-    - name: Ensure directory exists for server and move the repo
-      run: |
-        sudo mv /home/runner/work/express_app /home/runner/actions-runner/
-        # Fix ownership and permissions
-        sudo chown -R runner:runner /home/runner/actions-runner
-        sudo chmod -R 775 /home/runner/actions-runner
-
     - name: Create .env for server
-      working-directory: /home/runner/actions-runner/express_app/server
+      working-directory: ./server
       run: |
         echo "$SERVER_ENV" > .env
+        echo "Environment file created:"
+        cat .env
         echo $USER
         echo $PATH
         npm i -g pm2
@@ -36,17 +31,19 @@ jobs:
         SERVER_ENV: ${{ secrets.Server_ENV }}
 
     - name: Install server dependencies
-      working-directory: /home/runner/actions-runner/express_app/server
+      working-directory: ./server
       run: npm install
 
     - name: Deploy and restart with PM2
-      working-directory: /home/runner/actions-runner/express_app/server
+      working-directory: ./server
       run: |
         if pm2 list | grep -q cicd; then
+          echo "Restarting existing PM2 app..."
           pm2 restart cicd
         else
-          pm2 start /home/runner/actions-runner/express_app/server/app.js --name cicd
+          echo "Starting new PM2 app..."
+          pm2 start app.js --name cicd
         fi
 
-    - name: Post-job cleanup
-      run:  rm -rf /home/runner/actions-runner/temp_files/
+    - name: Verify PM2 processes
+      run: pm2 list
