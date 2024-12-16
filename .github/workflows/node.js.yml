@@ -35,11 +35,6 @@ jobs:
       
     - name: Deploy and restart with PM2
       working-directory: server
-      run: |
-        if pm2 list | grep -q "ci-cd app"; then
-          pm2 restart "ci-cd app"
-        else
-          pm2 start app.js --name "ci-cd app"
-        fi
+      run: npm start
 
 
