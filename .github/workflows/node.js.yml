@@ -26,6 +26,8 @@ jobs:
       working-directory: server
       run: |
         echo "$SERVER_ENV" > .env
+        echo $USER
+        echo $PATH
       env:
         SERVER_ENV: ${{ secrets.Server_ENV }}
 
