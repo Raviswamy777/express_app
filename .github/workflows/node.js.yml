@@ -47,3 +47,6 @@ jobs:
         else
           pm2 start /home/runner/actions-runner/express_app/server/app.js --name cicd
         fi
+
+    - name: Post-job cleanup
+      run:  rm -rf /home/runner/actions-runner/temp_files/
