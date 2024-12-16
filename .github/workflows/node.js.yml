@@ -21,14 +21,8 @@ jobs:
     - name: Create .env for server
       working-directory: ./server
       run: |
-        echo "$SERVER_ENV" > .env
-        echo "Environment file created:"
-        cat .env
-        echo $USER
-        echo $PATH
-        npm i -g pm2
-      env:
-        SERVER_ENV: ${{ secrets.Server_ENV }}
+        touch ./.env
+        echo "${{ secrets.SERVER_ENV }}" > ./.env
 
     - name: Install server dependencies
       working-directory: ./server
@@ -36,14 +30,4 @@ jobs:
 
     - name: Deploy and restart with PM2
       working-directory: ./server
-      run: |
-        if pm2 list | grep -q cicd; then
-          echo "Restarting existing PM2 app..."
-          pm2 restart cicd
-        else
-          echo "Starting new PM2 app..."
-          pm2 start app.js --name cicd
-        fi
-
-    - name: Verify PM2 processes
-      run: pm2 list
+      run: npm start
