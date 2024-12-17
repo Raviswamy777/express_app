@@ -4,7 +4,7 @@ import "dotenv/config"
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('CI-CD Configuration Succesfull');
+  res.send('CI-CD Successfull ...');
 });
 
 const PORT = process.env.PORT || 9999;
